@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import Login from './components/Login';
 import PlaylistCard from './components/PlaylistCard';
 import PlaylistModal from './components/PlaylistModal';
 
@@ -77,13 +78,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className='arrow-playlist-arrow'>
-          <button id="left-arrow-button" onClick={() => {handleLeft()}}>{String.fromCharCode(8592)}</button> 
-          <PlaylistModal className={"playlist-modal"} currentPlaylistIndex={playlists.findIndex(playlist => playlist?.id === currentPlaylistId)} playlistShow={playlistShow} setPlaylistShow={setPlaylistShow} playlists={playlists} setPlaylists={setPlaylists}  setCurrentPlaylistId={setCurrentPlaylistId}/>
-          {!playlistShow && playlistsElements}
-          <button id="right-arrow-button" onClick={() => {handleRight()}}>{String.fromCharCode(8594)}</button>
-        </div> 
-        <button id="add-new-playlist-button" onClick={() => {setPlaylistShow(true)}}>Add New Playlist +</button>
+        {<div className="homepage">  
+          <div className='arrow-playlist-arrow'>
+            <button id="left-arrow-button" onClick={() => {handleLeft()}}>{String.fromCharCode(8592)}</button> 
+            <PlaylistModal className={"playlist-modal"} currentPlaylistIndex={playlists.findIndex(playlist => playlist?.id === currentPlaylistId)} playlistShow={playlistShow} setPlaylistShow={setPlaylistShow} playlists={playlists} setPlaylists={setPlaylists}  setCurrentPlaylistId={setCurrentPlaylistId}/>
+            {!playlistShow && playlistsElements}
+            <button id="right-arrow-button" onClick={() => {handleRight()}}>{String.fromCharCode(8594)}</button>
+          </div> 
+          <button id="add-new-playlist-button" onClick={() => {setPlaylistShow(true)}}>Add New Playlist +</button>
+        </div>}
       </header>
     </div>
   );
