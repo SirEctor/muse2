@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import PlaylistCard from './components/PlaylistCard';
-import {v4 as uuid} from "uuid";
+import PlaylistModal from './components/PlaylistModal';
 
 function App() {
   const [playlists, setPlaylists] = useState([]);
@@ -30,17 +30,7 @@ function App() {
     }
   }
 
-  function handleAddPlaylist(){
-    const newPlaylist = {
-      id: uuid(),
-      songs: []
-    };
-    
-    const updatedPlaylist = [...playlists, newPlaylist];
-    setPlaylists(updatedPlaylist);
-    console.log(updatedPlaylist);
-    setCurrentPlaylistId(newPlaylist?.id);
-  }
+  
 
   function handleLeft(){
     if(currentPlaylistId === null){
@@ -74,21 +64,26 @@ function App() {
   const playlistsElements = playlists.map((playlist) => {
     if(currentPlaylistId === playlist?.id){
       return(
-        <PlaylistCard key={playlist?.id} id={playlist?.id} songs={playlist?.songs} handleDeletePlaylist={handleDeletePlaylist}/>
+        <PlaylistCard key={playlist?.id} playlists={playlists} id={playlist?.id} songs={playlist?.songs} handleDeletePlaylist={handleDeletePlaylist} setPlaylists={setPlaylists}/>
       )
     }
     return null;
   });
+
+  const [playlistShow, setPlaylistShow] = useState(false);
+
+
 
   return (
     <div className="App">
       <header className="App-header">
         <div className='arrow-playlist-arrow'>
           <button id="left-arrow-button" onClick={() => {handleLeft()}}>{String.fromCharCode(8592)}</button> 
-          {playlistsElements}
+          <PlaylistModal className={"playlist-modal"} currentPlaylistIndex={playlists.findIndex(playlist => playlist?.id === currentPlaylistId)} playlistShow={playlistShow} setPlaylistShow={setPlaylistShow} playlists={playlists} setPlaylists={setPlaylists}  setCurrentPlaylistId={setCurrentPlaylistId}/>
+          {!playlistShow && playlistsElements}
           <button id="right-arrow-button" onClick={() => {handleRight()}}>{String.fromCharCode(8594)}</button>
         </div> 
-        <button id="add-new-playlist-button" onClick={() => {handleAddPlaylist()}}>Add New Playlist +</button>
+        <button id="add-new-playlist-button" onClick={() => {setPlaylistShow(true)}}>Add New Playlist +</button>
       </header>
     </div>
   );
