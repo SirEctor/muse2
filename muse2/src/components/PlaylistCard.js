@@ -8,7 +8,7 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         console.log(playlists);
         const removedSongFromPlaylist = {
                 "id": id, 
-                title: thisPlaylist.title,
+                "title": thisPlaylist.title,
                 "songs": thisPlaylist.songs.filter(song => song?.id !== songsId)
             }
         

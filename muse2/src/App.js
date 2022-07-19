@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Login from './components/Login';
 import PlaylistCard from './components/PlaylistCard';
 import PlaylistModal from './components/PlaylistModal';
 
+
 function App() {
-  const [playlists, setPlaylists] = useState([]);
-  const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
+  const [playlists, setPlaylists] = useState(JSON.parse(localStorage.getItem('muse2-playlists')) || []);
+  const [currentPlaylistId, setCurrentPlaylistId] = useState(JSON.parse(localStorage.getItem('muse2-currentPlaylistId')) ||null);
+
+ useEffect(() => {
+  localStorage.setItem("muse2-playlists", JSON.stringify(playlists));
+ }, [playlists]);
+
+ useEffect(() => {
+  localStorage.setItem("muse2-currentPlaylistId", JSON.stringify(currentPlaylistId));
+ }, [currentPlaylistId]);
 
   function handleDeletePlaylist(id){
     const currentPlaylistIndex = playlists.findIndex(playlist => playlist?.id === id);

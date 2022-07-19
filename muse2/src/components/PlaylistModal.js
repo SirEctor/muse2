@@ -31,6 +31,7 @@ export default function PlaylistModal({currentPlaylistIndex, playlistShow, setPl
 
         setTitle("");
         setPlaylistShow(false);
+        
     }
     
     
