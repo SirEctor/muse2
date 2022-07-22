@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {v4 as uuid} from "uuid";
-import { convertNormalUrlToEmbed } from '../utilities';
 
 export default function SongModal({ show, onClose, songs, playlists, setPlaylists, currentInd }) {
     const [songState, setSongState] = useState({
@@ -21,7 +20,7 @@ export default function SongModal({ show, onClose, songs, playlists, setPlaylist
         copyOfPlaylists[currentInd].songs = [...songs, {
             id: uuid(),
             title: songState.title,
-            source: convertNormalUrlToEmbed(songState.URL)
+            source: songState.URL
         }];
 
         setPlaylists(copyOfPlaylists);
