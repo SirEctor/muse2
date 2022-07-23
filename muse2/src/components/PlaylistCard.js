@@ -2,22 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import SongModal from "./SongModal";
 import YouTube from 'react-youtube';
 import { getIdFromUrl } from '../utilities';
+import { click } from '@testing-library/user-event/dist/click';
 
 export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylist, setPlaylists}) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentPlayingIndex, setCurrentPlayingIndex] = useState(undefined);
-    const [events, setEvents] = useState([]);
     const songsRef = useRef([]);
 
     useEffect(() => {
         songsRef.current = songsRef.current.slice(0, songs.length);
     },[songs]);
-
-
-    function _onLoad(event){
-        console.log(event);
-       setEvents([...events, event]);
-    }
 
     function deleteSong(songsId){
         const thisPlaylist = playlists[playlists.findIndex(playlist => playlist?.id === id)];
@@ -93,6 +87,11 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         setCurrentPlayingIndex(curPlay.findIndex(song => song?.id == event.target.o.id.slice("iframe-".length)));
         //console.log(curPlay.findIndex(song => song?.id == event.target.o.id.slice("iframe-".length)));
     }
+
+    function _onLoad(event){
+        document.getElementById(event.target.o.id).trigger('click');
+        console.log("LOADED and CLICKED ONCE!");
+    }
     
     const songVideos = songs.map((song, index) => {
         return(
@@ -152,14 +151,6 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
 
         const copy = [...playlists];
         copy[playlists.findIndex(playlist => playlist === thisPlaylist)] = randomizedThisPlaylist;
-        
-        
-        console.log(playlists);
-        console.log(playlists.findIndex(playlist => playlist === thisPlaylist));
-        console.log(randomizedThisPlaylist)
-        
-        console.log(copy);
-
         setPlaylists(copy);
     }
     
