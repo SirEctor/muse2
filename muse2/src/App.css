@@ -147,3 +147,10 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.random-button {
+  color:rgb(237, 147, 72);
+  background-color: #f05c51;
+  border: tomato;
+  border-radius: 10px;
+}
