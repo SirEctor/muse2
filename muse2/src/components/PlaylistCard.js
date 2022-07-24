@@ -143,6 +143,21 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         sCopy[playlists.findIndex(playlist => playlist === thisPlaylist)] = draggedPlaylist;
         setPlaylists(sCopy);
     }
+
+    const getDragStyle = (isDraggingOver) => ({
+        background: isDraggingOver ? "#789aa1" : "#95b8bf",
+        padding: "10px"
+    });
+
+    const getSongCardStyle = (isDragging, draggableStyle) => ({
+        userSelect: "none",
+        padding: "10px",
+        marginBottom: "5px",
+        marginTop: "5px",
+        background: isDragging ? "#7bd7bc" : "#58777f",
+        borderRadius: "10px",
+        ...draggableStyle
+    })
     
     return (
         <div>
@@ -159,13 +174,13 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
                 </div>
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId='inner-card'>
-                    {(provided) =>( 
-                            <div className='inner-card' {...provided.droppableProps} ref={provided.innerRef}>
+                    {(provided, snapshot) =>( 
+                            <div className='inner-card' {...provided.droppableProps} ref={provided.innerRef} style={getDragStyle(snapshot.isDraggingOver)}>
                                 {
                                     songs.map((song, index) => (
                                             <Draggable  key={song?.id} draggableId={song?.id} index={index}>
                                                 {(provided, snapshot) => (
-                                                <div className='song-video' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                                <div className='song-video' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={getSongCardStyle(snapshot.isDragging, provided.draggableProps.style)}>
                                                     <h4 className='song-title-h4'>{(song?.title.length < 20) ? song?.title : song?.title.slice(0,17).concat("...")}</h4>
                                                     <YouTube 
                                                         ref={(el) => {songsRef.current[index] = el}}
