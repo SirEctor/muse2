@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import SongModal from "./SongModal";
 import YouTube from 'react-youtube';
 import { getIdFromUrl } from '../utilities';
-import { click } from '@testing-library/user-event/dist/click';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylist, setPlaylists}) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -91,38 +91,9 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
     function _onLoad(event){
         document.getElementById(event.target.o.id).trigger('click');
         console.log("LOADED and CLICKED ONCE!");
+        
     }
     
-    const songVideos = songs.map((song, index) => {
-        return(
-            <div className='song-video' key={song?.id}>
-                <h4 className='song-title-h4'>{(song?.title.length < 20) ? song?.title : song?.title.slice(0,17).concat("...")}</h4>
-                {/* <iframe 
-                    id={`iframe-${song?.id}`}
-                    src={song?.source}
-                    frameBorder="0"
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                    title="video"
-                    width="160"
-                    height="90"
-                />{" "} */}
-                <YouTube 
-                    ref={(el) => {songsRef.current[index] = el}}
-                    videoId={getIdFromUrl(song?.source)}
-                    opts={videoParams}
-                    onEnd={(event) => _onEnd(event)}
-                    onStateChange = {(event) => _onStateChange(event)}
-                    onPause={(event) => _onPause(event)}
-                    onPlay={(event) => _onPlay(event)}
-                    onLoad={(event) => _onLoad(event)}
-                    id={`iframe-${song?.id}`}
-                />
-                <button className='delete-button' onClick={() => {deleteSong(song?.id)}}>Delete Song</button>
-            </div>
-        );
-    });
-
     const [show, setShow] = useState(false);
     
     function showModal() {
@@ -153,6 +124,25 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         copy[playlists.findIndex(playlist => playlist === thisPlaylist)] = randomizedThisPlaylist;
         setPlaylists(copy);
     }
+
+    function handleOnDragEnd(result){
+        if(!result.destination || result.destination === result.source) return;
+
+        const thisPlaylist = playlists[playlists.findIndex(playlist => playlist?.id === id)];
+        const songsCopy = [...songs];
+        const [songDraggedOut] = songsCopy.splice(result.source.index, 1);
+        songsCopy.splice(result.destination.index, 0, songDraggedOut);
+
+        const draggedPlaylist = {
+            "id": thisPlaylist.id,
+            "title": thisPlaylist.title,
+            "songs" : songsCopy
+        };
+
+        const sCopy = [...playlists];
+        sCopy[playlists.findIndex(playlist => playlist === thisPlaylist)] = draggedPlaylist;
+        setPlaylists(sCopy);
+    }
     
     return (
         <div>
@@ -167,9 +157,38 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
                         <input defaultValue="Search for a song..."/>
                     </div>
                 </div>
-                <div className='inner-card'>
-                    {songVideos}
-                </div>
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                    <Droppable droppableId='inner-card'>
+                    {(provided) =>( 
+                            <div className='inner-card' {...provided.droppableProps} ref={provided.innerRef}>
+                                {
+                                    songs.map((song, index) => (
+                                            <Draggable  key={song?.id} draggableId={song?.id} index={index}>
+                                                {(provided, snapshot) => (
+                                                <div className='song-video' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                                    <h4 className='song-title-h4'>{(song?.title.length < 20) ? song?.title : song?.title.slice(0,17).concat("...")}</h4>
+                                                    <YouTube 
+                                                        ref={(el) => {songsRef.current[index] = el}}
+                                                        videoId={getIdFromUrl(song?.source)}
+                                                        opts={videoParams}
+                                                        onEnd={(event) => _onEnd(event)}
+                                                        onStateChange = {(event) => _onStateChange(event)}
+                                                        onPause={(event) => _onPause(event)}
+                                                        onPlay={(event) => _onPlay(event)}
+                                                        onLoad={(event) => _onLoad(event)}
+                                                        id={`iframe-${song?.id}`}
+                                                    />
+                                                    <button className='delete-button' onClick={() => {deleteSong(song?.id)}}>Delete Song</button>
+                                                </div>)}
+                                            </Draggable>
+                                        )
+                                    )
+                                }
+                                {provided.placeholder}
+                            </div>
+                    )}
+                    </Droppable>
+                </DragDropContext>
                 <button className='add-song-button' onClick={() => showModal()}>Add Song</button>
                 <button className='delete-playlist-button' onClick={() => {handleDeletePlaylist(id)}}>Delete Playlist</button>
             </div>)}
