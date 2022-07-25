@@ -21,6 +21,7 @@
   background-color: #95b8bf;
   border-radius: 10px;
   padding: 10px;
+  max-width: 340px;
 }
 
 .inner-card {
@@ -32,7 +33,13 @@
   margin-bottom: 5px;
   margin-top: 5px;
   overflow-y: scroll;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
   height: 300px;
+}
+
+.inner-card::-webkit-scrollbar {
+  display: none;
 }
 
 .song-video {
@@ -88,11 +95,13 @@
   align-items: center;
 }
 
+.search-and-arrows {
+  display: flex;
+  flex-direction: column;
+}
+
 #left-arrow-button, #right-arrow-button {
-  height: 85vh;
-  padding-left: 30px;
-  padding-right: 30px;
-  font-size: 40px;
+  height: 400px;
 }
 
 #add-new-playlist-button {
@@ -154,4 +163,29 @@
   background-color: #f05c51;
   border: tomato;
   border-radius: 10px;
+}
+
+.iframe-song {
+  padding-top: 10px;
+}
+
+#search-input {
+  background-color: white;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  width: 80%;
+  margin-bottom: 0px;
+}
+
+.search-results {
+  height: 100px;
+  width: 55%;
+  justify-content: center;
+  text-align: left;
+  display: grid;
+  left: 50%;
+  transform: translateX(-50%);
 }

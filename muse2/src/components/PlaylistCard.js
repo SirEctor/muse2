@@ -163,14 +163,10 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         <div>
             <SongModal className={"song-modal"} show={show} onClose={onClose} songs={songs} playlists={playlists} setPlaylists={setPlaylists} currentInd={playlists.findIndex(playlist => playlist?.id === id)}/>
             {!show && (<div className='card'>
-                <h2 className='playlist-title-h2'>{playlists[playlists.findIndex(playlist => playlist?.id === id)]?.title}</h2>
+                <h2 className='playlist-title-h2'> {(playlists[playlists.findIndex(playlist => playlist?.id === id)]?.title.length < 20) ? playlists[playlists.findIndex(playlist => playlist?.id === id)]?.title : playlists[playlists.findIndex(playlist => playlist?.id === id)]?.title.slice(0,17).concat("...")}</h2>
                 <div className='autoplay-and-search'>
                     <button className='autoplay-button' onClick={() => {startAutoPlay(0)}}>{"Autoplay ".concat(String.fromCharCode(9654))}</button>
                     <button className='random-button' onClick={() => {randomizeSongs()}}>Randomize</button>
-                    <div>
-                        <button className='search-song-button'>Search</button>
-                        <input defaultValue="Search for a song..."/>
-                    </div>
                 </div>
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId='inner-card'>
@@ -192,6 +188,7 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
                                                         onPlay={(event) => _onPlay(event)}
                                                         onLoad={(event) => _onLoad(event)}
                                                         id={`iframe-${song?.id}`}
+                                                        className="iframe-song"
                                                     />
                                                     <button className='delete-button' onClick={() => {deleteSong(song?.id)}}>Delete Song</button>
                                                 </div>)}
