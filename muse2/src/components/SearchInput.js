@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function SearchInput({ playlists }) {
+export default function SearchInput({ playlists, setCurrentPlaylistId }) {
     const [searchedPlaylists, setSearchedPlaylists] = useState([]); 
     const [searchedSongs, setSearchedSongs] = useState([]);
     
@@ -12,14 +12,14 @@ export default function SearchInput({ playlists }) {
             return;
         };
         const filteredPlaylists = [...playlists].filter(playlist => playlist.title.toLowerCase().includes(event.target.value?.toLowerCase()));
-        setSearchedPlaylists(filteredPlaylists.map(playlist => {return playlist.title}));
+        setSearchedPlaylists(filteredPlaylists.map(playlist => {return {"title": playlist.title, "id": playlist.id}}));
         console.log(searchedPlaylists);
 
         let filteredSongs = [];
         playlists.map(playlist => {
             playlist.songs.map((song) => {
                 if(song.title.toLowerCase().includes(event.target.value?.toLowerCase())){
-                    filteredSongs.push(song.title);
+                    filteredSongs.push({"title" : song.title, "id": playlist.id});
                 }
             })
         });
@@ -37,16 +37,16 @@ export default function SearchInput({ playlists }) {
         />
 
         <div className='search-results' style={{zIndex: 10, position:"relative"}}>
-            {searchedPlaylists.length > 0 && searchedPlaylists.map((playlistTitle, index) => {
+            {searchedPlaylists.length > 0 && searchedPlaylists.map((playlist, index) => {
                return(<div key={index} style={{background: "#c3ecd7" , color :"black"}}>
-                   <p style={{paddingLeft: "10px", paddingRight:"10px"}}>{playlistTitle}</p>
+                   <p style={{paddingLeft: "10px", paddingRight:"10px"}}>{playlist.title}</p>
                 </div>)
             })}
         
-            {searchedSongs.length > 0 && searchedSongs.map((songTitle, index) => {
+            {searchedSongs.length > 0 && searchedSongs.map((songObject, index) => {
                 return(
                     <div key={index} style={{background:"#c3ecf7", color: "black"}}>
-                        <p style={{paddingLeft: "10px", paddingRight:"10px"}}>{songTitle}</p> 
+                        <p style={{paddingLeft: "10px", paddingRight:"10px"}}>{songObject.title}</p> 
                     </div>
                 )
             })}

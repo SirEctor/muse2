@@ -84,7 +84,7 @@ export default function PlaylistCard({ playlists, id, songs, handleDeletePlaylis
         setIsPlaying(true);
         const curPlay = playlists[playlists.findIndex(playlist => playlist?.id === id)]?.songs;
         //console.log(curPlay);
-        setCurrentPlayingIndex(curPlay.findIndex(song => song?.id == event.target.o.id.slice("iframe-".length)));
+        setCurrentPlayingIndex(curPlay.findIndex(song => song?.id === event.target.o.id.slice("iframe-".length)));
         //console.log(curPlay.findIndex(song => song?.id == event.target.o.id.slice("iframe-".length)));
     }
 
