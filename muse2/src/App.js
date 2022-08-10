@@ -87,9 +87,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <nav className='top-nav'>
-          <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
+          <Link className='nav-links' to="/">Home</Link>
+          <Link className='nav-links' to="/login">Login</Link>
+          <Link className='nav-links' to="/signup">Sign Up</Link>
         </nav>
         {<div className="homepage">  
           <div className='search-and-arrows'>
